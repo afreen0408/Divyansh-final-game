@@ -138,7 +138,7 @@ function draw()  {
         
     }  
     if(gameState===PLAY)  {
-
+        player.x=200;
     spawnBoxes();
     
     if(frameCount%10===0)  {
@@ -150,7 +150,7 @@ function draw()  {
         spawnRobots();
 
     }
-    if(player.x<0)  {
+    if(player.x<150)  {
         gameState=END
     }
     if(BulletGroup.isTouching(player))  {
@@ -180,13 +180,18 @@ function draw()  {
     }
     if(keyDown("Space")&&player.y>400)  {
         player.velocityY = -13
+        player.changeAnimation("jumping",PC_Jumping);
     }
-
-    
+//console.log(player.y);
+    if(player.y>730){
+        player.changeAnimation("running",player_img);
+    }
     for(var i = 0; i<invPlatformGroup.length; i++  )  {
 
-    
-    if(invPlatformGroup.get(i).isTouching(player))  {
+    if (invPlatformGroup.get(i).x<0){
+        invPlatformGroup.get(i).destroy();
+    }
+    if(invPlatformGroup.get(i).isTouching(player)&&player.y<749)  {
         player.velocityY = 0;
         player.collide(invPlatformGroup.get(i))
     }
@@ -218,12 +223,15 @@ function draw()  {
        invPlatformGroup.destroyEach();
        player.x=200;
        if(mousePressedOver(playAgain))  {
-           form();
-           gameState=FORM
+        gameState=FORM   
+        form();
+           
             lifes=3
             playAgain.visible = false
-            //player.x=200
+            player.velocityX=0
+            
             score=0;
+            coinscollected=0;
 
        } 
 
@@ -241,6 +249,7 @@ function draw()  {
     stroke("blue")
     text(Name,player.x,player.y-50) 
     player.depth = player.depth+1
+    text(mouseX+","+mouseY, mouseX,mouseY)
 }
 
 
